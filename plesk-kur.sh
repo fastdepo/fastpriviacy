@@ -153,16 +153,10 @@ fi
 
 export HISTSIZE=10000
 
-if [ ! -d "$HOME/ubuntu-nginx-web-server" ]; then
-    git clone https://github.com/VirtuBox/ubuntu-nginx-web-server.git "$HOME/ubuntu-nginx-web-server" >> /dev/null 2>&1
-else
-    git -C "$HOME/ubuntu-nginx-web-server" pull origin master >> /dev/null 2>&1
-fi
-
 if [ ! -f /etc/sysctl.d/60-plesk-tweaks.conf ]; then
     if [ "$plesk_srv_arch" = "x86_64" ]; then
         wget -qO /etc/sysctl.d/60-plesk-tweaks.conf \
-            https://raw.githubusercontent.com/WordOps/WordOps/master/wo/cli/templates/sysctl.mustache
+            https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sysctl.mustache
         if [ "$plesk_distro_version" = "bionic" ] || [ "$plesk_distro_version" = "disco" ] || [ "$plesk_distro_version" = "buster" ]; then
             modprobe tcp_bbr && echo 'tcp_bbr' >>/etc/modules-load.d/bbr.conf
             echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >>/etc/sysctl.d/60-plesk-tweaks.conf

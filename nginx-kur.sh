@@ -358,10 +358,6 @@ _nginx_from_scratch_setup() {
 
 }
 
-##################################
-# Dynamic modules
-##################################
-
 _dynamic_setup() {
     if [ -d /usr/share/nginx/modules ]; then
         rm -rf /usr/share/nginx/modules/*.old
@@ -374,12 +370,6 @@ _dynamic_setup() {
         done
     fi
 }
-
-##################################
-# Install gcc7 or gcc8 from PPA
-##################################
-# gcc7 if Nginx is compiled with RTMP module
-# otherwise gcc8 is used
 
 _gcc_ubuntu_setup() {
 
@@ -402,7 +392,6 @@ _gcc_ubuntu_setup() {
             exit 1
         fi
         {
-            # update gcc alternative to use gcc-8 by default
             update-alternatives --remove-all gcc
             update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8
         } >>/dev/null 2>&1
@@ -420,7 +409,6 @@ _gcc_ubuntu_setup() {
             exit 1
         fi
         {
-            # update gcc alternative to use gcc-7 by default
             update-alternatives --remove-all gcc
             update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 80 --slave /usr/bin/g++ g++ /usr/bin/g++-7
         } >>/dev/null 2>&1
@@ -459,10 +447,6 @@ _dependencies_repo() {
     } >>/tmp/nginx-ee.log 2>&1
 }
 
-##################################
-# Install ffmpeg for rtmp module
-##################################
-
 _rtmp_setup() {
     echo -ne '       Installing FFMPEG for RTMP module      [..]\r'
     if {
@@ -484,20 +468,12 @@ _rtmp_setup() {
     fi
 }
 
-##################################
-# Cleanup modules
-##################################
-
 _cleanup_modules() {
 
     cd "$DIR_SRC" || exit 1
     rm -rf /usr/local/src/{*.tar.gz,nginx,nginx-1.*,pcre,zlib,incubator-pagespeed-*,build_ngx_pagespeed.sh,install,ngx_http_redis,naxsi}
 
 }
-
-##################################
-# Download additional modules
-##################################
 
 _download_modules() {
 
@@ -521,7 +497,6 @@ _download_modules() {
             }
         fi
 
-        # ipscrub module
         { [ -d "$DIR_SRC/ipscrubtmp" ] && {
             git -C "$DIR_SRC/ipscrubtmp" pull origin master &
         }; } || {
@@ -538,10 +513,6 @@ _download_modules() {
     fi
 
 }
-
-##################################
-# Download zlib
-##################################
 
 _download_zlib() {
 
@@ -579,10 +550,6 @@ _download_zlib() {
 
 }
 
-##################################
-# Download ngx_broti
-##################################
-
 _download_brotli() {
 
     cd "$DIR_SRC" || exit 1
@@ -604,10 +571,6 @@ _download_brotli() {
 
 }
 
-##################################
-# Download and patch OpenSSL
-##################################
-
 _download_openssl_dev() {
 
     cd "$DIR_SRC" || exit 1
@@ -623,21 +586,21 @@ _download_openssl_dev() {
                     git clone --depth=50 https://github.com/openssl/openssl.git /usr/local/src/openssl
                     cd /usr/local/src/openssl || exit 1
                     echo "### git checkout commit ###"
-                    #git checkout $OPENSSL_COMMIT
+
                 else
                     cd /usr/local/src/openssl || exit 1
                     echo "### reset openssl to master and clean patches ###"
                     git fetch --all
                     git reset --hard origin/master
                     git clean -f
-                    #git checkout $OPENSSL_COMMIT
+
                 fi
             else
                 echo "### cloning openssl ###"
                 git clone --depth=50 https://github.com/openssl/openssl.git /usr/local/src/openssl
                 cd /usr/local/src/openssl || exit 1
                 echo "### git checkout commit ###"
-                #git checkout $OPENSSL_COMMIT
+
             fi
         } >>/tmp/nginx-ee.log 2>&1
 
@@ -649,9 +612,9 @@ _download_openssl_dev() {
                 git clone --depth=50 https://github.com/VirtuBox/openssl-patch.git /usr/local/src/openssl-patch
             fi
             cd /usr/local/src/openssl || exit 1
-            # apply openssl ciphers patch
+
             echo "### openssl ciphers patch ###"
-            #patch -p1 <../openssl-patch/openssl-equal-3.0.0-dev_ciphers.patch
+
         } >>/tmp/nginx-ee.log 2>&1
 
     }; then
@@ -663,10 +626,6 @@ _download_openssl_dev() {
     fi
 
 }
-
-##################################
-# Download LibreSSL
-##################################
 
 _download_libressl() {
 
@@ -690,10 +649,6 @@ _download_libressl() {
 
 }
 
-##################################
-# Download Naxsi
-##################################
-
 _download_naxsi() {
 
     cd "$DIR_SRC" || exit 1
@@ -716,10 +671,6 @@ _download_naxsi() {
     fi
 
 }
-
-##################################
-# Download Pagespeed
-##################################
 
 _download_pagespeed() {
 
@@ -746,10 +697,6 @@ _download_pagespeed() {
     fi
 }
 
-##################################
-# Download Nginx
-##################################
-
 _download_nginx() {
 
     cd "$DIR_SRC" || exit 1
@@ -772,10 +719,6 @@ _download_nginx() {
 
 }
 
-##################################
-# Apply Nginx patches
-##################################
-
 _patch_nginx() {
 
     cd /usr/local/src/nginx || exit 1
@@ -784,7 +727,6 @@ _patch_nginx() {
 
         {
             curl -sL https://raw.githubusercontent.com/kn007/patch/master/nginx.patch | patch -p1
-            #curl -sL https://raw.githubusercontent.com/kn007/patch/master/nginx_auto_using_PRIORITIZE_CHACHA.patch | patch -p1
         } >>/tmp/nginx-ee.log 2>&1
 
     }; then
@@ -797,10 +739,6 @@ _patch_nginx() {
 
 }
 
-##################################
-# Configure Nginx
-##################################
-
 _configure_nginx() {
     local DEB_CFLAGS
     local DEB_LFLAGS
@@ -810,7 +748,7 @@ _configure_nginx() {
     if {
         echo -ne '       Nginx Build Ediliyor                          [..]\r'
 
-        # main configuration
+
         NGINX_BUILD_OPTIONS="--prefix=/usr/share \
 --conf-path=/etc/nginx/nginx.conf \
 --http-log-path=/var/log/nginx/access.log \
@@ -824,7 +762,7 @@ _configure_nginx() {
 --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
 --modules-path=/usr/share/nginx/modules"
 
-        # built-in modules
+
         if [ -z "$OVERRIDE_NGINX_MODULES" ]; then
             NGINX_INCLUDED_MODULES="--with-http_stub_status_module \
         --with-http_realip_module \
@@ -838,7 +776,7 @@ _configure_nginx() {
             NGINX_INCLUDED_MODULES="$OVERRIDE_NGINX_MODULES"
         fi
 
-        # third party modules
+
         if [ -z "$OVERRIDE_NGINX_ADDITIONAL_MODULES" ]; then
             if [ "$DYNAMIC_MODULES" = "y" ]; then
                 NGINX_THIRD_MODULES="--with-compat \
@@ -913,23 +851,19 @@ _configure_nginx() {
 
 }
 
-##################################
-# Compile Nginx
-##################################
-
 _compile_nginx() {
     if {
         echo -ne '       Kontrol Ediliyor                           [..]\r'
 
         {
-            # compile Nginx
+
             make -j "$(nproc)"
-            # Strip debug symbols
+
             strip --strip-unneeded /usr/local/src/nginx/objs/nginx
             if [ "$DYNAMIC_MODULES" = "y" ]; then
                 strip --strip-unneeded /usr/local/src/nginx/objs/*.so
             fi
-            # install Nginx
+
             make install
 
         } >>/tmp/nginx-ee.log 2>&1
@@ -943,15 +877,11 @@ _compile_nginx() {
 
 }
 
-##################################
-# Perform final tasks
-##################################
-
 _updating_nginx_manual() {
 
     echo -ne '       Versiyon Güncelleniyor                     [..]\r'
     if {
-        # update nginx manual
+
         [ -f /usr/share/man/man8/nginx.8.gz ] && {
             rm /usr/share/man/man8/nginx.8.gz
         }
@@ -962,7 +892,7 @@ _updating_nginx_manual() {
 
         } >>/tmp/nginx-ee.log
 
-        # update mime.types
+
         cp -f ${DIR_SRC}/nginx/conf/mime.types /etc/nginx/mime.types
 
     }; then
@@ -995,34 +925,27 @@ _final_tasks() {
 
     echo -ne '       Performans Ayarları Yapılıyor             [..]\r'
     if {
-        # block Nginx package update from APT repository
+
         if [ "$PLESK_VALID" = "YES" ]; then
             {
-                # update nginx ciphers_suites
+
                 sed -i "s/ssl_ciphers\ \(\"\|.\|'\)\(.*\)\(\"\|.\|'\);/ssl_ciphers \"$TLS13_CIPHERS\";/" /etc/nginx/conf.d/ssl.conf
-                # update nginx ssl_protocols
                 sed -i "s/ssl_protocols\ \(.*\);/ssl_protocols TLSv1.2 TLSv1.3;/" /etc/nginx/conf.d/ssl.conf
-                # block sw-nginx package updates from APT repository
                 echo -e 'Package: sw-nginx*\nPin: release *\nPin-Priority: -1' >/etc/apt/preferences.d/nginx-block
                 apt-mark hold sw-nginx
             } >>/tmp/nginx-ee.log
         elif [ "$EE_VALID" = "YES" ]; then
             {
-                # update nginx ssl_protocols
+
                 sed -i "s/ssl_protocols\ \(.*\);/ssl_protocols TLSv1.2 TLSv1.3;/" /etc/nginx/nginx.conf
-                # update nginx ciphers_suites
                 sed -i "s/ssl_ciphers\ \(\"\|'\)\(.*\)\(\"\|'\)/ssl_ciphers \"$TLS13_CIPHERS\"/" /etc/nginx/nginx.conf
-                # block nginx package updates from APT repository
                 echo -e 'Package: nginx*\nPin: release *\nPin-Priority: -1' >/etc/apt/preferences.d/nginx-block
                 apt-mark hold nginx-ee nginx-common nginx-custom
             } >>/tmp/nginx-ee.log
         elif [ "$WO_VALID" = "YES" ]; then
             {
-                # update nginx ssl_protocols
                 sed -i "s/ssl_protocols\ \(.*\);/ssl_protocols TLSv1.2 TLSv1.3;/" /etc/nginx/nginx.conf
-                # update nginx ciphers_suites
                 sed -i "s/ssl_ciphers\ \(\"\|.\|'\)\(.*\)\(\"\|.\|'\);/ssl_ciphers \"$TLS13_CIPHERS\";/" /etc/nginx/nginx.conf
-                # block nginx package updates from APT repository
                 echo -e 'Package: nginx*\nPin: release *\nPin-Priority: -1' >/etc/apt/preferences.d/nginx-block
                 CHECK_NGINX_WO=$(dpkg --list | grep nginx-wo)
                 if [ ! -z "$CHECK_NGINX_WO" ]; then
@@ -1034,11 +957,9 @@ _final_tasks() {
         fi
 
         {
-            # enable nginx service
             systemctl unmask nginx.service
             systemctl enable nginx.service
             systemctl start nginx.service
-            # remove default configuration
             rm -f /etc/nginx/{*.default,*.dpkg-dist}
 			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginx.conf -O /etc/nginx/nginx.conf
 			rm -rf /etc/nginx/modules.conf.d/ngx_http_passenger_module.conf
@@ -1055,7 +976,6 @@ _final_tasks() {
 
     echo -ne '       Nginx Test Ediliyor           [..]\r'
 
-    # check if nginx -t do not return errors
     VERIFY_NGINX_CONFIG=$(nginx -t 2>&1 | grep failed)
     if [ -z "$VERIFY_NGINX_CONFIG" ]; then
         {
