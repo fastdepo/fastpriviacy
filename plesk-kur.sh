@@ -138,7 +138,7 @@ export HISTSIZE=10000
 if [ ! -f /etc/sysctl.d/60-plesk-tweaks.conf ]; then
     if [ "$plesk_srv_arch" = "x86_64" ]; then
         wget -qO /etc/sysctl.d/60-plesk-tweaks.conf \
-            https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sysctl.mustache
+            https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sysctl.mustache 2> /dev/null
         if [ "$plesk_distro_version" = "bionic" ] || [ "$plesk_distro_version" = "disco" ] || [ "$plesk_distro_version" = "buster" ]; then
             modprobe tcp_bbr && echo 'tcp_bbr' >>/etc/modules-load.d/bbr.conf
             echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >>/etc/sysctl.d/60-plesk-tweaks.conf
@@ -152,9 +152,9 @@ fi
 
 if [ ! -x /opt/kernel-tweak.sh ]; then
     {
-        wget -qO /opt/kernel-tweak.sh https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.sh
+        wget -qO /opt/kernel-tweak.sh https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.sh 2> /dev/null
         chmod +x /opt/kernel-tweak.sh
-        wget -qO /lib/systemd/system/kernel-tweak.service https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.service
+        wget -qO /lib/systemd/system/kernel-tweak.service https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.service 2> /dev/null
         systemctl enable kernel-tweak.service
         systemctl start kernel-tweak.service
     } >>/tmp/plesk-install.log 2>&1
@@ -199,7 +199,7 @@ fi
 if [ "$mariadb_server_install" = "y" ]; then
 
     cp /etc/mysql/my.cnf /etc/mysql/my.cnf.bak
-	wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/my.cnf -O /etc/mysql/my.cnf
+	wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/my.cnf -O /etc/mysql/my.cnf 2> /dev/null
     service mysql stop
     mv /var/lib/mysql/ib_logfile0 /var/lib/mysql/ib_logfile0.bak
     mv /var/lib/mysql/ib_logfile1 /var/lib/mysql/ib_logfile1.bak
@@ -217,10 +217,13 @@ if [ -z "$plesk_installed" ]; then
 
     if ! { ./plesk-installer install release --components panel fail2ban modsecurity \
         l10n pmm mysqlgroup repair-kit \
-        proftpd mod_fcgid webservers \
-        nginx php7.3 php7.4 config-troubleshooter \
+        spamassassin postfix dovecot \
+        proftpd awstats mod_fcgid webservers \
+        nginx php7.4 php7.3 config-troubleshooter \
         psa-firewall wp-toolkit letsencrypt \
         imunifyav sslit; } >>/tmp/plesk-install.log 2>&1; then
+        echo
+        echo "An error occurred! The installation of Plesk failed. Please see logged lines above for error handling!"
         tail -f 50 /tmp/plesk-install.log | ccze -A
         exit 1
     fi
@@ -313,7 +316,7 @@ echo
 echo
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/17ffcf2a-8e8f-4cb2-9265-1543ff530984-scheduled-backups-list/download
 echo
-wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/panel.ini -O /usr/local/psa/admin/conf/panel.ini
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/panel.ini -O /usr/local/psa/admin/conf/panel.ini 2> /dev/null
 echo
 
 if [ "$clone" = "on" ]; then
