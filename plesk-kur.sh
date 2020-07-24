@@ -209,7 +209,7 @@ fi
 
 if [ "$mariadb_server_install" = "y" ]; then
     cp /etc/mysql/my.cnf /etc/mysql/my.cnf.bak >> /dev/null 2>&1
-    cp -f "$HOME/ubuntu-nginx-web-server/etc/mysql/my.cnf" /etc/mysql/my.cnf >> /dev/null 2>&1
+    wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/my.cnf -O /etc/mysql/my.cnf >> /dev/null 2>&1
     service mysql stop >> /dev/null 2>&1
     mv /var/lib/mysql/ib_logfile0 /var/lib/mysql/ib_logfile0.bak >> /dev/null 2>&1
     mv /var/lib/mysql/ib_logfile1 /var/lib/mysql/ib_logfile1.bak >> /dev/null 2>&1
@@ -359,9 +359,9 @@ wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginxDomainV
 wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginxForwarding.php -O /opt/psa/admin/conf/templates/default/domain/nginxForwarding.php >> /dev/null 2>&1
 wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domainVirtualHost.php -O /opt/psa/admin/conf/templates/default/domain/domainVirtualHost.php >> /dev/null 2>&1
 /usr/local/psa/admin/sbin/httpdmng --reconfigure-all >> /dev/null 2>&1
-wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sshd_config -O /etc/ssh/sshd_config
-sshd -t
-service sshd restart
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sshd_config -O /etc/ssh/sshd_config >> /dev/null 2>&1
+sshd -t >> /dev/null 2>&1
+service sshd restart >> /dev/null 2>&1
 
 
 
