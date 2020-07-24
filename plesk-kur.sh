@@ -354,7 +354,6 @@ clear
 
 
 echo
-clear
 echo "Plesk Panel Kuruldu"
 echo
 
