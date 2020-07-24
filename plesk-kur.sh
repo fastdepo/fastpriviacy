@@ -350,6 +350,10 @@ echo >> /dev/null 2>&1
 clear
 plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set crs -waf-rule-set-update-period daily -waf-config-preset tradeoff >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+rm -rf /root/parallels >> /dev/null 2>&1
+rm -rf /root/plesk-installer >> /dev/null 2>&1
+rm -rf /root/ubuntu-nginx-web-server >> /dev/null 2>&1
+
 
 
 echo
