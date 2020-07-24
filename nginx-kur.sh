@@ -1062,10 +1062,10 @@ _final_tasks() {
             systemctl stop nginx
             systemctl start nginx
         } >>/tmp/nginx-ee.log 2>&1
-        echo -ne "       Nginx Test Ediliyor                       [${CGREEN}KURULDU${CEND}]\\r"
+        echo -ne "       Nginx Test Ediliyor                        [${CGREEN}KURULDU${CEND}]\\r"
         echo ""
     else
-        echo -e "       Nginx Test Ediliyor                       [${CRED}BASARISIZ${CEND}]"
+        echo -e "       Nginx Test Ediliyor                        [${CRED}BASARISIZ${CEND}]"
         echo -e "       Nginx Performans ve Güvenlik ayarları başarıyla uygulandı."
 		echo -e "       Kurulum Başarılı"
     fi
