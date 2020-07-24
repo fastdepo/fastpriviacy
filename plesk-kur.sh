@@ -350,7 +350,6 @@ echo >> /dev/null 2>&1
 clear
 plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set crs -waf-rule-set-update-period daily -waf-config-preset tradeoff >> /dev/null 2>&1
 echo >> /dev/null 2>&1
-clear
 
 
 echo
