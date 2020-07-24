@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
-plesk_email='admin@ahmet.host'
-plesk_pass='PleskAhmet123'
+plesk_email='admin@test.tst'
+plesk_pass='PleskUbuntu123'
 plesk_name='admin'
 plesk_ui=spv
 fail2ban=yes
 http2=yes
+
 pci_compliance=false
+
 clone=off
+
+if [ "$(id -u)" != "0" ]; then
+    echo "Error: You must be root to run this script, please use the root user to install the software."
+    echo ""
+    echo "Use 'su - root' to login as root"
+    exit 1
+fi
 
 if {
     plesk version >/dev/null 2>&1
@@ -25,11 +34,11 @@ readonly plesk_kvm_detec=$(systemd-detect-virt)
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
-    --hizlikur)
-        hizli_kur="y"
+    --interactive)
+        interactive_install="y"
         ;;
-    --travis-secmeli)
-        travis-secmeli="y"
+    --travis)
+        travis="y"
         release_tiers="testing"
         agreement="true"
         mariadb_server_install="y"
@@ -72,7 +81,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 sleep 1
-if [ "$hizli_kur" = "y" ]; then
+if [ "$interactive_install" = "y" ]; then
     if [ ! -d /etc/mysql ]; then
         while [[ $mariadb_server_install != "y" && $mariadb_server_install != "n" ]]; do
             echo -e "MariaDB Kurulsun mu ? [y/n]: "
@@ -104,15 +113,15 @@ if [ -z "$plesk_installed" ]; then
 fi
 
 if [[ -z "$plesk_email" || -z "$plesk_pass" || -z "$plesk_name" || -z "$agreement" ]]; then
-    echo 'One or more variables are undefined. Please check your initialization values.'
     exit 1
 fi
 
+echo ""
 sleep 5
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [ -z "$travis-secmeli" ]; then
+if [ -z "$travis" ]; then
     apt-get update -qq
     apt-get --option=Dpkg::options::=--force-confmiss \
         --option=Dpkg::options::=--force-confold \
@@ -169,10 +178,10 @@ NET_INTERFACES_WAN=$(ip -4 route get 8.8.8.8 | grep -oP "dev [^[:space:]]+ " | c
     echo "net.ipv6.conf.$NET_INTERFACES_WAN.accept_ra = 0"
     echo "net.ipv6.conf.$NET_INTERFACES_WAN.autoconf = 0"
     echo "net.ipv6.conf.$NET_INTERFACES_WAN.accept_ra_defrtr = 0"
-} >>/etc/sysctl.d/60-plesk-tweaks.conf
-
+} >>/etc/sysctl.d/60-ubuntu-nginx-web-server.conf
 
 if [ "$mariadb_server_install" = "y" ]; then
+    echo ""
     {
         wget -qO mariadb_repo_setup https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
         chmod +x mariadb_repo_setup
@@ -184,11 +193,11 @@ fi
 
 if [ "$mariadb_server_install" = "y" ]; then
     if [ ! -d /etc/mysql ]; then
-
+        echo ""
         MYSQL_ROOT_PASS=""
         echo "mariadb-server-${mariadb_version_install} mysql-server/root_password password ${MYSQL_ROOT_PASS}" | debconf-set-selections
         echo "mariadb-server-${mariadb_version_install} mysql-server/root_password_again password ${MYSQL_ROOT_PASS}" | debconf-set-selections
-        apt-get install -qq mariadb-server # -qq implies -y --force-yes
+        apt-get install -qq mariadb-server
         mysql -e "DROP USER ''@'localhost'" >/dev/null 2>&1
         mysql -e "DROP USER ''@'$(hostname)'" >/dev/null 2>&1
         mysql -e "DROP DATABASE test" >/dev/null 2>&1
@@ -212,10 +221,11 @@ fi
 if [ -z "$plesk_installed" ]; then
     wget -O plesk-installer https://installer.plesk.com/plesk-installer
     echo
+
     chmod +x ./plesk-installer
     echo
 
-    if ! { ./plesk-installer install release --components panel fail2ban modsecurity \
+    if ! { ./plesk-installer install release --components panel modsecurity fail2ban \
         l10n pmm mysqlgroup repair-kit \
         spamassassin postfix dovecot \
         proftpd awstats mod_fcgid webservers \
@@ -223,14 +233,11 @@ if [ -z "$plesk_installed" ]; then
         psa-firewall wp-toolkit letsencrypt \
         imunifyav sslit; } >>/tmp/plesk-install.log 2>&1; then
         echo
-        echo "An error occurred! The installation of Plesk failed. Please see logged lines above for error handling!"
         tail -f 50 /tmp/plesk-install.log | ccze -A
         exit 1
     fi
 
     if [ "$plesk_kvm_detec" = "kvm" ]; then
-
-        echo "Enable VPS Optimized Mode"
         plesk bin vps_optimized --turn-on >>/tmp/plesk-install.log 2>&1
         echo
     fi
@@ -245,7 +252,6 @@ if [ -z "$plesk_installed" ]; then
         /usr/sbin/plesk bin init_conf --init -email "$plesk_email" -passwd "" -name "$plesk_name" -license_agreed "$agreement" -trial_license true
     fi
 
-
     if [ "$plesk_ui" = "spv" ]; then
         /usr/sbin/plesk bin poweruser --off
         echo
@@ -254,6 +260,7 @@ if [ -z "$plesk_installed" ]; then
         echo
     fi
 
+    echo "Setting Firewall to allow proper ports."
     {
         iptables -I INPUT -p tcp --dport 21 -j ACCEPT
         iptables -I INPUT -p tcp --dport 22 -j ACCEPT
@@ -271,8 +278,6 @@ if [ -z "$plesk_installed" ]; then
 	plesk bin locales --set-default tr-TR		
 	echo
 fi
-
-
 
 if [ "$fail2ban" = "yes" ]; then
     echo "Configuring Fail2Ban and its Jails"
@@ -297,34 +302,45 @@ if [ "$http2" = "yes" ]; then
     echo
 fi
 
+
 if [ "$pci_compliance" = "yes" ]; then
     /usr/sbin/plesk sbin pci_compliance_resolver --enable all
 fi
 
+
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/2ae9cd0b-bc5c-4464-a12d-bd882c651392-xovi/download
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/b71916cf-614e-4b11-9644-a5fe82060aaf-revisium-antivirus/download
-echo
+echo ""
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/bebc4866-d171-45fb-91a6-4b139b8c9a1b-panel-migrator/download
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/e789f164-5896-4544-ab72-594632bcea01-rich-editor/download
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/b49f9b1b-e8cf-41e1-bd59-4509d92891f7-magicspam/download
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/05bdda39-792b-441c-9e93-76a6ab89c85a-panel-ini-editor/download
 echo
+
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/17ffcf2a-8e8f-4cb2-9265-1543ff530984-scheduled-backups-list/download
 echo
-wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/panel.ini -O /usr/local/psa/admin/conf/panel.ini 2> /dev/null
+
+wget https://raw.githubusercontent.com/VirtuBox/ubuntu-plesk-onyx/master/usr/local/psa/admin/conf/panel.ini -O /usr/local/psa/admin/conf/panel.ini
 echo
 
 if [ "$clone" = "on" ]; then
     /usr/sbin/plesk bin cloning --update -prepare-public-image true -reset-license true -skip-update true
 else
+    echo "Giriş Bilgileriniz."
     /usr/sbin/plesk login
 fi
 
 echo
-echo "Kurulum Başarılı"
+echo "Plesk Kuruldu."
 echo
