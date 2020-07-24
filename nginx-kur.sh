@@ -353,7 +353,6 @@ _nginx_from_scratch_setup() {
         echo -ne '\n'
     else
         echo -e "       Setting Up Nginx configurations        [${CRED}BASARISIZ${CEND}]"
-        echo -e '\n      Please look at /tmp/nginx-ee.log\n'
         exit 1
     fi
 
@@ -418,7 +417,6 @@ _gcc_ubuntu_setup() {
             echo -ne '\n'
         else
             echo -e "        Installing gcc-7                      [${CRED}BASARISIZ${CEND}]"
-            echo -e '\n      Please look at /tmp/nginx-ee.log\n'
             exit 1
         fi
         {
@@ -482,7 +480,6 @@ _rtmp_setup() {
         echo -ne '\n'
     else
         echo -e "       Installing FFMPEG for RMTP module      [${CRED}BASARISIZ${CEND}]"
-        echo -e '\n      Please look at /tmp/nginx-ee.log\n'
         exit 1
     fi
 }
@@ -662,7 +659,6 @@ _download_openssl_dev() {
         echo -ne '\n'
     else
         echo -e "        OpenSSL İndiriliyor        [${CRED}BASARISIZ${CEND}]"
-        echo -e '\n      Please look at /tmp/nginx-ee.log\n'
         exit 1
     fi
 
@@ -689,7 +685,6 @@ _download_libressl() {
         echo -ne '\n'
     else
         echo -e "       Downloading LibreSSL      [${CRED}BASARISIZ${CEND}]"
-        echo -e '\n      Please look at /tmp/nginx-ee.log\n'
         exit 1
     fi
 
@@ -717,7 +712,6 @@ _download_naxsi() {
         echo -ne '\n'
     else
         echo -e "       Downloading naxsi      [${CRED}BASARISIZ${CEND}]"
-        echo -e '\n      Please look at /tmp/nginx-ee.log\n'
         exit 1
     fi
 
@@ -1070,7 +1064,6 @@ _final_tasks() {
         } >>/tmp/nginx-ee.log 2>&1
         echo -ne "       Nginx Test Ediliyor                       [${CGREEN}KURULDU${CEND}]\\r"
         echo ""
-        echo -e "       ${CGREEN}Nginx-ee was compiled successfully !${CEND}"
     else
         echo -e "       Nginx Test Ediliyor                       [${CRED}BASARISIZ${CEND}]"
         echo -e "       Nginx Performans ve Güvenlik ayarları başarıyla uygulandı."
