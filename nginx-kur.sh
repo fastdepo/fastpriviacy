@@ -266,9 +266,7 @@ else
 fi
 
 echo ""
-echo -e "${CGREEN}##################################${CEND}"
 echo " Kurulum başladı"
-echo -e "${CGREEN}##################################${CEND}"
 echo ""
 echo " İşletim Sistemi : $OS_DISTRO_FULL"
 echo ""
