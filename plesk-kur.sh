@@ -350,9 +350,19 @@ echo >> /dev/null 2>&1
 clear
 plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set crs -waf-rule-set-update-period daily -waf-config-preset tradeoff >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+
 rm -rf /root/parallels >> /dev/null 2>&1
 rm -rf /root/plesk-installer >> /dev/null 2>&1
 rm -rf /root/ubuntu-nginx-web-server >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/server.php -O /opt/psa/admin/conf/templates/default/server.php >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginxDomainVirtualHost.php -O /opt/psa/admin/conf/templates/default/domain/nginxDomainVirtualHost.php >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginxForwarding.php -O /opt/psa/admin/conf/templates/default/domain/nginxForwarding.php >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domainVirtualHost.php -O /opt/psa/admin/conf/templates/default/domain/domainVirtualHost.php >> /dev/null 2>&1
+/usr/local/psa/admin/sbin/httpdmng --reconfigure-all >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sshd_config -O /etc/ssh/sshd_config
+sshd -t
+service sshd restart
+
 
 
 
@@ -369,5 +379,7 @@ fi
 
 echo
 echo "İşlemlere devam edebilirsiniz."
+echo "SSH Portunuz 1453 Oldu."
+echo "Plesk İnce ayarları yapıldı, nginx/apache loglama kapatıldı ve powered by plesk kaldırıldı."
 echo
 
