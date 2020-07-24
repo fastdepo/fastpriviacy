@@ -105,6 +105,8 @@ if [ "$interactive_install" = "y" ]; then
         while [[ $agreement != "y" && $agreement != "n" ]]; do
             echo -e "Kuruluma başlansın mı ? [y/n]: "
             read -r agreement
+            clear
+            history -c
         done
     fi
 
@@ -144,16 +146,16 @@ apt-get \
     nload nmon ntp gnupg gnupg2 wget pigz tree tzdata ccze --quiet >> /dev/null 2>&1
 
 if ! grep -q "time.cloudflare.com" /etc/systemd/timesyncd.conf; then
-    sed -e 's/^#NTP=/NTP=time.cloudflare.com 0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org/' -i /etc/systemd/timesyncd.conf
+    sed -e 's/^#NTP=/NTP=time.cloudflare.com 0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org/' -i /etc/systemd/timesyncd.conf >> /dev/null 2>&1
     timedatectl set-ntp 1
 fi
 
 export HISTSIZE=10000
 
 if [ ! -d "$HOME/ubuntu-nginx-web-server" ]; then
-    git clone https://github.com/VirtuBox/ubuntu-nginx-web-server.git "$HOME/ubuntu-nginx-web-server"
+    git clone https://github.com/VirtuBox/ubuntu-nginx-web-server.git "$HOME/ubuntu-nginx-web-server" >> /dev/null 2>&1
 else
-    git -C "$HOME/ubuntu-nginx-web-server" pull origin master
+    git -C "$HOME/ubuntu-nginx-web-server" pull origin master >> /dev/null 2>&1
 fi
 
 if [ ! -f /etc/sysctl.d/60-plesk-tweaks.conf ]; then
@@ -173,25 +175,13 @@ fi
 
 if [ ! -x /opt/kernel-tweak.sh ]; then
     {
-        wget -qO /opt/kernel-tweak.sh https://raw.githubusercontent.com/VirtuBox/kernel-tweak/master/kernel-tweak.sh
+        wget -qO /opt/kernel-tweak.sh https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.sh
         chmod +x /opt/kernel-tweak.sh
-        wget -qO /lib/systemd/system/kernel-tweak.service https://raw.githubusercontent.com/VirtuBox/kernel-tweak/master/kernel-tweak.service
+        wget -qO /lib/systemd/system/kernel-tweak.service https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/kernel-tweak.service
         systemctl enable kernel-tweak.service
         systemctl start kernel-tweak.service
     } >>/tmp/plesk-install.log 2>&1
 fi
-
-NET_INTERFACES_WAN=$(ip -4 route get 8.8.8.8 | grep -oP "dev [^[:space:]]+ " | cut -d ' ' -f 2)
-{
-    echo ""
-    echo "# do not autoconfigure IPv6 on $NET_INTERFACES_WAN"
-    echo "net.ipv6.conf.$NET_INTERFACES_WAN.autoconf = 0"
-    echo "net.ipv6.conf.$NET_INTERFACES_WAN.accept_ra = 0"
-    echo "net.ipv6.conf.$NET_INTERFACES_WAN.accept_ra = 0"
-    echo "net.ipv6.conf.$NET_INTERFACES_WAN.autoconf = 0"
-    echo "net.ipv6.conf.$NET_INTERFACES_WAN.accept_ra_defrtr = 0"
-} >>/etc/sysctl.d/60-ubuntu-nginx-web-server.conf
-
 
 if [ "$mariadb_server_install" = "y" ]; then
     {
@@ -292,18 +282,12 @@ if [ -z "$plesk_installed" ]; then
 
     echo
 fi
-# Enable Modsecurity
-# https://docs.plesk.com/en-US/onyx/administrator-guide/server-administration/web-application-firewall-modsecurity.73383/
 
-#echo "Turning on Modsecurity WAF Rules"
-#plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set tortix -waf-rule-set-update-period daily -waf-config-preset tradeoff
-#echo
 
-# Enable Fail2Ban and Jails
-# https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/ip_ban-ip-address-banning-fail2ban.73594/
+
 
 if [ "$fail2ban" = "yes" ]; then
-    echo "Configuring Fail2Ban and its Jails"
+    echo "Configuring Fail2Ban and its Jails" >> /dev/null 2>&1
     /usr/sbin/plesk bin ip_ban --enable
     /usr/sbin/plesk bin ip_ban --enable-jails ssh
     /usr/sbin/plesk bin ip_ban --enable-jails recidive
@@ -352,16 +336,25 @@ echo "Installing Schedule Backup list Extension" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/17ffcf2a-8e8f-4cb2-9265-1543ff530984-scheduled-backups-list/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
 echo "Set custom panel.ini config" >> /dev/null 2>&1
-wget https://raw.githubusercontent.com/VirtuBox/ubuntu-plesk-onyx/master/usr/local/psa/admin/conf/panel.ini -O /usr/local/psa/admin/conf/panel.ini >> /dev/null 2>&1
+wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/panel.ini -O /usr/local/psa/admin/conf/panel.ini >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set crs -waf-rule-set-update-period daily -waf-config-preset tradeoff >> /dev/null 2>&1
+echo >> /dev/null 2>&1
+rm -rf /root/*
 
-if [ "$clone" = "on" ]; then
-    /usr/sbin/plesk bin cloning --update -prepare-public-image true -reset-license true -skip-update true >> /dev/null 2>&1
-else
-    echo "Here is your login" >> /dev/null 2>&1
-    /usr/sbin/plesk login 
-fi
 
 echo
 echo "Plesk Panel Kuruldu"
 echo
+
+if [ "$clone" = "on" ]; then
+    /usr/sbin/plesk bin cloning --update -prepare-public-image true -reset-license true -skip-update true >> /dev/null 2>&1
+else
+    echo "Giriş Bilgileri" >> /dev/null 2>&1
+    /usr/sbin/plesk login 
+fi
+
+echo
+echo "İşlemlere devam edebilirsiniz."
+echo
+
