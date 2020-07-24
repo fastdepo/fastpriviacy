@@ -107,6 +107,7 @@ if [ "$interactive_install" = "y" ]; then
             read -r agreement
             clear
             history -c
+            echo "Kuruluma başlandı ortalama 10dk içinde kurulum bitmiş olacak."
         done
     fi
 
@@ -314,36 +315,46 @@ fi
 
 echo "Installing Requested Plesk Extensions" >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing SEO Toolkit" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/2ae9cd0b-bc5c-4464-a12d-bd882c651392-xovi/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing Revisium Antivirus for Websites" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/b71916cf-614e-4b11-9644-a5fe82060aaf-revisium-antivirus/download >> /dev/null 2>&1
 echo "" >> /dev/null 2>&1
+clear
 echo "Installing Plesk Migration Manager" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/bebc4866-d171-45fb-91a6-4b139b8c9a1b-panel-migrator/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing Code Editor" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/e789f164-5896-4544-ab72-594632bcea01-rich-editor/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing MagicSpam" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/b49f9b1b-e8cf-41e1-bd59-4509d92891f7-magicspam/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing Panel.ini Extension" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/05bdda39-792b-441c-9e93-76a6ab89c85a-panel-ini-editor/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Installing Schedule Backup list Extension" >> /dev/null 2>&1
 /usr/sbin/plesk bin extension --install-url https://ext.plesk.com/packages/17ffcf2a-8e8f-4cb2-9265-1543ff530984-scheduled-backups-list/download >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 echo "Set custom panel.ini config" >> /dev/null 2>&1
 wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/panel.ini -O /usr/local/psa/admin/conf/panel.ini >> /dev/null 2>&1
 echo >> /dev/null 2>&1
+clear
 plesk bin server_pref --update-web-app-firewall -waf-rule-engine on -waf-rule-set crs -waf-rule-set-update-period daily -waf-config-preset tradeoff >> /dev/null 2>&1
 echo >> /dev/null 2>&1
-rm -rf /root/*
+clear
 
 
 echo
+clear
 echo "Plesk Panel Kuruldu"
 echo
 
