@@ -1046,7 +1046,7 @@ _final_tasks() {
         } >/dev/null 2>&1
 
     }; then
-        echo -ne "       Performans Ayarları Yapılıyor              [${CGREEN}KURULDU${CEND}]\\r"
+        echo -ne "       Performans Ayarları Yapılıyor              [${CGREEN}BASARILI${CEND}]\\r"
         echo -ne '\n'
     else
         echo -e "       Performans Ayarları Yapılıyor              [${CRED}BASARISIZ${CEND}]"
@@ -1062,8 +1062,9 @@ _final_tasks() {
             systemctl stop nginx
             systemctl start nginx
         } >>/tmp/nginx-ee.log 2>&1
-        echo -ne "       Nginx Test Ediliyor                        [${CGREEN}KURULDU${CEND}]\\r"
+        echo -ne "       Nginx Test Ediliyor                        [${CGREEN}BASARILI${CEND}]\\r"
         echo ""
+        echo -e "       ${CGREEN}Nginx Başarı ile kuruldu. !${CEND}"
     else
         echo -e "       Nginx Test Ediliyor                        [${CRED}BASARISIZ${CEND}]"
         echo -e "       Nginx Performans ve Güvenlik ayarları başarıyla uygulandı."
