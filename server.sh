@@ -24,25 +24,26 @@ clear
 case $CHOICE in
         1)
             echo "Depolama Server Kurmayı seçtiniz."
-			bash <(wget -O - https://git.io/JJBTr)
+			bash <(wget -O - https://git.io/JJBTr 2> /dev/null;)
 			clear
 			history -c
             ;;
         2)
             echo "Cache Server Kurmayı seçtiniz.."
-			bash <(wget -O - https://git.io/JJBTV)
+			bash <(wget -O - https://git.io/JJBTV 2> /dev/null;)
 			clear
 			history -c
             ;;
         3)
             echo "Performans Ayarlarını Yapmayı seçtiniz."
-			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/999-perf.conf -O /etc/sysctl.d/999-perf.conf
-			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/security/limits.conf
-			https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/systemd/system.conf
-			sysctl -e -p /etc/security/limits.conf
-			modprobe tcp_bbr && echo 'tcp_bbr' >> /etc/modules-load.d/bbr.conf
-			echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >> /etc/sysctl.d/999-perf.conf
-			echo never > /sys/kernel/mm/transparent_hugepage/enabled
+			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/999-perf.conf -O /etc/sysctl.d/999-perf.conf 2> /dev/null;
+			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/security/limits.conf 2> /dev/null;
+			https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/systemd/system.conf 2> /dev/null;
+			sysctl -e -p /etc/security/limits.conf 2> /dev/null;
+			modprobe tcp_bbr && echo 'tcp_bbr' >> /etc/modules-load.d/bbr.conf 2> /dev/null;
+			echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >> /etc/sysctl.d/999-perf.conf 2> /dev/null;
+			echo never > /sys/kernel/mm/transparent_hugepage/enabled 2> /dev/null;
+			echo "Performans ayarları yapıldı."
 
             ;;
         4)
