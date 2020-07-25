@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-plesk_email='admin@test.tst'
+plesk_email='admin@ahmet.com'
 plesk_pass='PleskUbuntu123'
 plesk_name='admin'
 
@@ -356,6 +356,7 @@ wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domainVirtua
 wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sshd_config -O /etc/ssh/sshd_config >> /dev/null 2>&1
 sshd -t >> /dev/null 2>&1
 service sshd restart >> /dev/null 2>&1
+apt-get install redis >> /dev/null 2>&1
 
 
 
