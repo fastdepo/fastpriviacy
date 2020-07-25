@@ -228,6 +228,7 @@ case $OPTION in
 
 	mkdir /home/html
 	wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/index.html -O /home/html/index.html
+	wget https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4 -O /home/html/test.mp4
 	rm -r /usr/local/src/nginx
 	clear
 	echo "Kurulum Başarılı.. > Nginx DEPOLAMA"
