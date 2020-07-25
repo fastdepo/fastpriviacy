@@ -24,13 +24,13 @@ clear
 case $CHOICE in
         1)
             echo "Depolama Server Kurmayı seçtiniz."
-			bash <(wget -O - https://git.io/JJBTr 2> /dev/null;) --interactive 
+			bash <(wget -O - https://git.io/JJBTr)
 			clear
 			history -c
             ;;
         2)
             echo "Cache Server Kurmayı seçtiniz.."
-			bash <(wget -O - https://git.io/JJBTV 2> /dev/null;)
+			bash <(wget -O - https://git.io/JJBTV)
 			clear
 			history -c
             ;;
