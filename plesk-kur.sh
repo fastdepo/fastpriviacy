@@ -356,7 +356,7 @@ wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domainVirtua
 wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/sshd_config -O /etc/ssh/sshd_config >> /dev/null 2>&1
 sshd -t >> /dev/null 2>&1
 service sshd restart >> /dev/null 2>&1
-apt-get install redis >> /dev/null 2>&1
+apt-get install redis -y >> /dev/null 2>&1
 
 
 
