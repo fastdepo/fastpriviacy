@@ -9,7 +9,7 @@ MENU="Yapmak istediğiniz işlemi seçiniz.:"
 
 OPTIONS=(1 "Depolama Server Kur"
          2 "Cache Server Kur"
-         3 "Cache Server Performans Ayarlarını Yap")
+         3 "Cache Server Performans Ayarlarını Yap"
          4 "Kernel Versiyonu Güncelle")
 
 CHOICE=$(dialog --clear \
