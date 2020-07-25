@@ -36,10 +36,14 @@ case $CHOICE in
             ;;
         3)
             echo "Performans Ayarlarını Yapmayı seçtiniz."
-			bash <(wget -O - https://git.io/JJ4zi 2> /dev/null;) -i --yes 2> /dev/null
-			clear
-			history -c
-			reboot
+			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/999-perf.conf -O /etc/sysctl.d/999-perf.conf
+			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/security/limits.conf
+			https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/systemd/system.conf
+			sysctl -e -p /etc/security/limits.conf
+			modprobe tcp_bbr && echo 'tcp_bbr' >> /etc/modules-load.d/bbr.conf
+			echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >> /etc/sysctl.d/999-perf.conf
+			echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
             ;;
         4)
             echo "Kernel Versiyonu Güncellemeyi seçiniz."
