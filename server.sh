@@ -43,6 +43,8 @@ case $CHOICE in
 			modprobe tcp_bbr && echo 'tcp_bbr' >> /etc/modules-load.d/bbr.conf 2> /dev/null;
 			echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >> /etc/sysctl.d/999-perf.conf 2> /dev/null;
 			echo never > /sys/kernel/mm/transparent_hugepage/enabled 2> /dev/null;
+			clear
+			history -c
 			echo "Performans ayarları yapıldı."
 
             ;;
