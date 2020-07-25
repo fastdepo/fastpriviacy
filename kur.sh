@@ -23,19 +23,19 @@ clear
 case $CHOICE in
         1)
             echo "Hızlı Plesk Kurulumunu Seçtiniz."
-			bash <(wget -O - https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/plesk-kur.sh 2> /dev/null;) --interactive 
+			bash <(wget -O - https://git.io/JJ4za 2> /dev/null;) --interactive 
 			clear
 			history -c
             ;;
         2)
             echo "Nginx Build Seçtiniz."
-			bash <(wget -O - https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/nginx-kur.sh 2> /dev/null;) --latest --dnyamic --pagespeed -openssl-system
+			bash <(wget -O - https://git.io/JJ4zK 2> /dev/null;) --latest --dnyamic --pagespeed -openssl-system
 			clear
 			history -c
             ;;
         3)
             echo "Kernel Versiyonu Güncellemeyi seçiniz."
-			bash <(wget -O - https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh 2> /dev/null;) -i --yes 2> /dev/null
+			bash <(wget -O - https://git.io/JJ4zi 2> /dev/null;) -i --yes 2> /dev/null
 			clear
 			history -c
 			reboot
