@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>PrivateServers</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=2.0">
+
+</head>
+
+<style>
+
+@import url(https://fonts.googleapis.com/css?family=Khula:700);
+body {
+background: #111;
+overflow:hidden;
+}
+.hidden {
+opacity:0;
+}
+h1 {
+
+font-family:Khula;
+font-size:1.5vw;
+color:white;
+text-align:center;
+height:8em;
+width:900px;
+position:absolute;
+top:10;
+bottom:0;
+left:0;
+right:0;
+margin:auto;
+}
+.console-container {
+
+font-family:Khula;
+font-size:3em;
+text-align:center;
+height:100px;
+width:900px;
+display:block;
+position:absolute;
+color:white;
+top:0;
+bottom:0;
+left:0;
+right:0;
+margin:auto;
+}
+.console-underscore {
+display:inline-block;
+position:relative;
+top:-0.14em;
+left:10px;
+}
+red {
+color: #ff0000;
+}
+
+orange {
+color: #ffa500;
+}
+
+yellow {
+color: #ffff00;
+}
+
+green {
+color: #16a085;
+}
+
+.blue {
+color: #2980b9;
+}
+
+</style>
+
+<body>
+
+<div class='console-container'>
+<span>PrivateServers Are <span id='text'></span><div class='console-underscore' id='console'>&#95;</div></div>
+<h1>Sorry We are currently unavailable to the public<h1>
+
+</body>
+
+
+<script>
+// function([string1, string2],target id,[color1,color2])    
+consoleText(['Fast', 'Secure', 'Reliable','Encrypted','Safe','DDos Protected','Custom','Dedicated','Always Online'], 'text',['#ff0000','#ffa500','#ffff00','#16a085','#2980b9','#ff0000','#ffa500','#ffff00','#16a085','#2980b9']);
+
+function consoleText(words, id, colors) {
+if (colors === undefined) colors = ['#fff'];
+var visible = true;
+var con = document.getElementById('console');
+var letterCount = 1;
+var x = 1;
+var waiting = false;
+var target = document.getElementById(id)
+target.setAttribute('style', 'color:' + colors[0])
+window.setInterval(function() {
+
+if (letterCount === 0 && waiting === false) {
+waiting = true;
+target.innerHTML = words[0].substring(0, letterCount)
+window.setTimeout(function() {
+var usedColor = colors.shift();
+colors.push(usedColor);
+var usedWord = words.shift();
+words.push(usedWord);
+x = 1;
+target.setAttribute('style', 'color:' + colors[0])
+letterCount += x;
+waiting = false;
+}, 1000)
+} else if (letterCount === words[0].length + 1 && waiting === false) {
+waiting = true;
+window.setTimeout(function() {
+x = -1;
+letterCount += x;
+waiting = false;
+}, 1000)
+} else if (waiting === false) {
+target.innerHTML = words[0].substring(0, letterCount)
+letterCount += x;
+}
+}, 120)
+window.setInterval(function() {
+if (visible === true) {
+con.className = 'console-underscore hidden'
+visible = false;
+
+} else {
+con.className = 'console-underscore'
+
+visible = true;
+}
+}, 400)
+}
+</script>
+
+</html>
