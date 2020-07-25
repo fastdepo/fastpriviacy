@@ -227,6 +227,11 @@ case $OPTION in
 	fi
 
 	rm -r /usr/local/src/nginx
+	mkdir /home/ssl
+	wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domain.crt -O /home/ssl/domain.crt
+	wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/domain.key -O /home/ssl/domain.key
+	nginx -t
+	service nginx restart
 	clear
 	echo "Kurulum Başarılı.. > Nginx CACHE"
 	exit
