@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HEIGHT=10
+HEIGHT=14
 WIDTH=60
 CHOICE_HEIGHT=20
 BACKTITLE="Hızlı Kurulum v1.2"
