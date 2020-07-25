@@ -36,9 +36,9 @@ case $CHOICE in
             ;;
         3)
             echo "Performans Ayarlarını Yapmayı seçtiniz."
-			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/999-perf.conf -O /etc/sysctl.d/999-perf.conf 2> /dev/null;
-			wget https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/security/limits.conf 2> /dev/null;
-			https://raw.githubusercontent.com/fastdepo/fastpriviacy/master/limits.conf -O /etc/systemd/system.conf 2> /dev/null;
+			wget https://git.io/JJBkb 2> /dev/null;
+			wget https://git.io/JJBkN 2> /dev/null;
+			wget https://git.io/JJBkA 2> /dev/null;
 			sysctl -e -p /etc/security/limits.conf 2> /dev/null;
 			modprobe tcp_bbr && echo 'tcp_bbr' >> /etc/modules-load.d/bbr.conf 2> /dev/null;
 			echo -e '\nnet.ipv4.tcp_congestion_control = bbr\nnet.ipv4.tcp_notsent_lowat = 16384' >> /etc/sysctl.d/999-perf.conf 2> /dev/null;
