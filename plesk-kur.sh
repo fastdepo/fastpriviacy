@@ -215,17 +215,17 @@ if [ -z "$plesk_installed" ]; then
     chmod +x ./plesk-installer >> /dev/null 2>&1
     echo >> /dev/null 2>&1
 
-    if ! { ./plesk-installer install release --components panel fail2ban modsecurity \
+    if ! { ./plesk-installer install release --components panel bind fail2ban \
         l10n pmm mysqlgroup repair-kit \
         roundcube spamassassin postfix dovecot \
-        proftpd awstats mod_fcgid webservers \
-        nginx php7.3 php7.4 config-troubleshooter \
+        proftpd awstats mod_fcgid webservers git \
+        nginx php7.2 php7.3 config-troubleshooter \
         psa-firewall wp-toolkit letsencrypt \
-        imunifyav sslit; } >>/tmp/plesk-install.log 2>&1 >> /dev/null 2>&1; then
+        imunifyav sslit; } >>/tmp/plesk-install.log 2>&1; then
         echo
-        echo "An error occurred! The installation of Plesk failed. Please see logged lines above for error handling!" >> /dev/null 2>&1
-        tail -f 50 /tmp/plesk-install.log | ccze -A >> /dev/null 2>&1
-        exit 1 
+        echo "An error occurred! The installation of Plesk failed. Please see logged lines above for error handling!"
+        tail -f 50 /tmp/plesk-install.log | ccze -A
+        exit 1
     fi
 
     if [ "$plesk_kvm_detec" = "kvm" ]; then
