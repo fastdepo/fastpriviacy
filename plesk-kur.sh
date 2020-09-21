@@ -146,11 +146,6 @@ apt-get \
     --assume-yes install haveged curl git unzip zip htop \
     nload nmon ntp gnupg gnupg2 wget pigz tree tzdata ccze --quiet >> /dev/null 2>&1
 
-if ! grep -q "time.cloudflare.com" /etc/systemd/timesyncd.conf; then
-    sed -e 's/^#NTP=/NTP=time.cloudflare.com 0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org/' -i /etc/systemd/timesyncd.conf >> /dev/null 2>&1
-    timedatectl set-ntp 1
-fi
-
 export HISTSIZE=10000
 
 if [ ! -f /etc/sysctl.d/60-plesk-tweaks.conf ]; then
